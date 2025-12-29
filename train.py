@@ -2,6 +2,7 @@ import os
 import csv
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
+import argparse
 
 import torch
 import torch.nn as nn
@@ -11,11 +12,21 @@ import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
-from model import MLP
+from model import build_model
 
 # -------------------------
 # Helpers
 # -------------------------
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--model", type=str, default="mlp", choices=["mlp", "cnn"])
+    p.add_argument("--epochs", type=int, default=15)
+    p.add_argument("--batch-size", type=int, default=64)
+    p.add_argument("--lr", type=float, default=1e-3)
+    p.add_argument("--ckpt", type=str, default=None)
+    return p.parse_args()
+
 
 @dataclass
 class EpochMetrics:
@@ -197,6 +208,8 @@ def fit(
 
 
 def main():
+    args = parse_args()
+
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
@@ -216,21 +229,22 @@ def main():
 
     train_loader = DataLoader(
         train_dataset,
-        batch_size=64,
+        batch_size=args.batch_size,
         shuffle=True
     )
     val_loader = DataLoader(
         val_dataset,
-        batch_size=64,
+        batch_size=args.batch_size,
         shuffle=False
     )
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("device:", device)
 
-    model = MLP().to(device)
+    ckpt_path = args.ckpt or f"artifacts/{args.model}_best.pt"
+    model = build_model(args.model).to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     fit(
         model,
         train_loader,
@@ -238,10 +252,10 @@ def main():
         criterion,
         optimizer,
         device,
-        epochs=15,
-        ckpt_path="artifacts/best.pt",
-        metrics_path="results/metrics.csv",
-        plots_dir="results"
+        epochs=args.epochs,
+        ckpt_path=ckpt_path,
+        metrics_path=f"results/{args.model}/metrics.csv",
+        plots_dir=f"results/{args.model}"
     )
 
 

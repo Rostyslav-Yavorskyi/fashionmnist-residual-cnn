@@ -1,6 +1,8 @@
 import os
 from typing import Dict
 from typing import List
+import argparse
+
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
@@ -9,7 +11,16 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report, ConfusionMatrixDisplay
 
-from model import MLP
+from model import build_model
+
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--model", type=str, default="mlp", choices=["mlp", "cnn"])
+    p.add_argument("--batch-size", type=int, default=64)
+    p.add_argument("--ckpt", type=str, default=None)
+    p.add_argument("--out-dir", type=str, default=None)
+    return p.parse_args()
 
 
 def load_checkpoint(path: str, model: nn.Module, device: str) -> Dict:
@@ -79,6 +90,10 @@ def evaluate(model: nn.Module, loader: DataLoader, criterion: nn.Module, device:
 
 
 def main():
+    args = parse_args()
+    ckpt_path = args.ckpt or f"artifacts/{args.model}_best.pt"
+    out_dir = args.out_dir or f"results/{args.model}"
+
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
@@ -91,7 +106,7 @@ def main():
     )
     test_loader = DataLoader(
         test_dataset,
-        batch_size=64,
+        batch_size=args.batch_size,
         shuffle=False
     )
 
@@ -99,10 +114,9 @@ def main():
     print("device:", device)
     
     # Model
-    model = MLP().to(device)
-    
+    model = build_model(args.model).to(device)
+
     # Load best checkpoint 
-    ckpt_path = "artifacts/best.pt"
     ckpt = load_checkpoint(ckpt_path, model, device)
     print("Loaded checkpoint from epoch:", ckpt.get("epoch"), "best_val_loss:", ckpt.get("best_val_loss"))
 
@@ -114,8 +128,8 @@ def main():
     # Save artifacts
     class_names = test_dataset.classes
 
-    save_confusion_matrix(y_true, y_pred, "results/confusion_matrix.png", class_names)
-    save_classification_report(y_true, y_pred, "results/classification_report.txt", class_names)
+    save_confusion_matrix(y_true, y_pred, f"{out_dir}/confusion_matrix.png", class_names)
+    save_classification_report(y_true, y_pred, f"{out_dir}/classification_report.txt", class_names)
 
 
 if __name__ == "__main__":

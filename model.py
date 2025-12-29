@@ -42,3 +42,12 @@ class CNN(nn.Module):
         x = self.fc(x)
         return x
 
+
+
+def build_model(name: str):
+    name = name.lower()
+    if name == "mlp":
+        return MLP()
+    if name == "cnn":
+        return CNN()
+    raise ValueError(f"Unknown model: {name}. Use mlp, cnn")
