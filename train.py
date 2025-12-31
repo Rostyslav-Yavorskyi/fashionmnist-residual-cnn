@@ -175,10 +175,14 @@ def fit(
     epochs: int = 10,
     ckpt_path: str = "artifacts/best.pt",
     metrics_path: str = "results/metrics.csv",
-    plots_dir: str = "results"
+    plots_dir: str = "results",
+    patience: int = 5,
+    min_delta: float = 0.0
 ) -> List[EpochMetrics]:
     best_val_loss = float("inf")
     history: List[EpochMetrics] = []
+    epochs_no_improve = 0
+    best_epoch = 0
     for epoch in range(1, epochs + 1):
         train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc = validate(model, val_loader, criterion, device)
@@ -191,8 +195,11 @@ def fit(
             f"val_loss={val_loss:.4f}, val_acc={val_acc:.4f}"
         )
 
-        if val_loss < best_val_loss:
+        if val_loss < best_val_loss - min_delta:
             best_val_loss = val_loss
+            epochs_no_improve = 0
+            best_epoch = epoch
+            
             save_best_checkpoint(
                 ckpt_path,
                 model,
@@ -200,6 +207,12 @@ def fit(
                 epoch,
                 best_val_loss
             )
+        else:
+            epochs_no_improve += 1
+
+        if epochs_no_improve >= patience:
+            print(f"Stopped at epoch {epoch}, best epoch was {best_epoch}")
+            break
 
     write_csv_metrics(metrics_path, history)
     plot_curves(plots_dir, history)
