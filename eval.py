@@ -16,7 +16,7 @@ from model import build_model
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--model", type=str, default="mlp", choices=["mlp", "cnn"])
+    p.add_argument("--model", type=str, default="mlp", choices=["mlp", "cnn", "rescnn"])
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--ckpt", type=str, default=None)
     p.add_argument("--out-dir", type=str, default=None)
