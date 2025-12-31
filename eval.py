@@ -5,12 +5,12 @@ import argparse
 
 import torch
 import torch.nn as nn
-from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report, ConfusionMatrixDisplay
 
+from datasets import get_test_loader
 from model import build_model
 
 
@@ -93,21 +93,9 @@ def main():
     args = parse_args()
     ckpt_path = args.ckpt or f"artifacts/{args.model}_best.pt"
     out_dir = args.out_dir or f"results/{args.model}"
-
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,))
-    ])
-    test_dataset = datasets.FashionMNIST(
+    test_loader, class_names = get_test_loader(
         root="data",
-        train=False,
-        download=True,
-        transform=transform
-    )
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=args.batch_size,
-        shuffle=False
+        batch_size=args.batch_size
     )
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -126,8 +114,6 @@ def main():
     print(f"test_loss={test_loss:.4f}, test_acc={test_acc:.4f}")
 
     # Save artifacts
-    class_names = test_dataset.classes
-
     save_confusion_matrix(y_true, y_pred, f"{out_dir}/confusion_matrix.png", class_names)
     save_classification_report(y_true, y_pred, f"{out_dir}/classification_report.txt", class_names)
 
