@@ -1,4 +1,4 @@
-# FashionMNIST – CNN vs Residual CNN
+# FashionMNIST - CNN vs Residual CNN
 
 This project compares three neural network architectures on the FashionMNIST dataset:
 - MLP (baseline)
@@ -11,8 +11,6 @@ The goal is to demonstrate:
 - overfitting handling (early stopping)
 - reproducible experiments via CLI
 
----
-
 ## Overview
 
 FashionMNIST is a grayscale image classification task (28×28, 10 classes).
@@ -20,8 +18,6 @@ We benchmark increasingly expressive models to analyze accuracy, generalization
 and error patterns.
 
 This project is intended as a clean, reproducible baseline for image classification experiments using PyTorch.
-
----
 
 ## Setup
 
@@ -38,8 +34,6 @@ uv venv
 source .venv/bin/activate
 uv pip install -r requirements.txt
 ```
-
----
 
 ## Usage
 
@@ -68,8 +62,6 @@ uv run python train.py --model rescnn --seed 42
 
 CLI options are available via `--help`.
 
----
-
 ## Models
 
 | Model       | Description                             |
@@ -79,8 +71,6 @@ CLI options are available via `--help`.
 | ResidualCNN | CNN with residual blocks (ResNet-style) |
 
 
----
-
 ## Data Split
 
   - Train: 60,000 samples
@@ -88,8 +78,6 @@ CLI options are available via `--help`.
   - Test: 10,000 samples (never seen during training)
 
 Early stopping is applied based on validation loss.
-
----
 
 ## Results
 
@@ -104,16 +92,12 @@ Results obtained with `--seed 42`, best checkpoint by validation loss.
 
 Best checkpoint selected based on validation loss.
 
----
-
 ## Analysis
 
   - ResidualCNN achieves the best generalization performance
   - Largest confusion occurs between visually similar classes:
     - Shirt ↔ T-shirt / Pullover / Coat
   - Residual connections stabilize training but give only modest gains on small datasets
-
----
 
 ## Artifacts
 
@@ -130,8 +114,6 @@ results/
       └── classification_report.txt
 ```
 
----
-
 ## Tech Stack
   - Python
   - PyTorch
@@ -139,8 +121,6 @@ results/
   - Scikit-learn
   - Matplotlib
   - tqdm
-
----
 
 ## Next Steps
 
