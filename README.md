@@ -93,12 +93,13 @@ Early stopping is applied based on validation loss.
 
 ## Results
 
+Results obtained with `--seed 42`, best checkpoint by validation loss.
 
 | Model       | Test Accuracy |
 |-------------|---------------|
-| MLP         | 0.8801        |
-| CNN         | 0.9184        |
-| ResidualCNN | 0.9320        |
+| MLP         | 0.8835        |
+| CNN         | 0.9150        |
+| ResidualCNN | 0.9293        |
 
 
 Best checkpoint selected based on validation loss.
