@@ -90,8 +90,6 @@ Results obtained with `--seed 42`, best checkpoint by validation loss.
 | ResidualCNN | 0.9293        |
 
 
-Best checkpoint selected based on validation loss.
-
 ## Analysis
 
   - ResidualCNN achieves the best generalization performance
