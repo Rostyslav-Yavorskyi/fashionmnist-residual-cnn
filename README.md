@@ -59,6 +59,13 @@ uv run python eval.py \
   --batch-size 64
 ```
 
+### Reproducibility
+Use `--seed` to make runs reproducible:
+
+```bash
+uv run python train.py --model rescnn --seed 42
+```
+
 CLI options are available via `--help`.
 
 ---
