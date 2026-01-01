@@ -1,7 +1,14 @@
 [project]
 name = "fashionmnist-residual-cnn"
 version = "0.1.0"
-description = "Add your description here"
+description = " MLP, CNN and Residual CNN comparison on FashionMNIST with a clean PyTorch training pipeline"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+	"torch",
+	"torchvision",
+	"numpy",
+	"matplotlib",
+	"scikit-learn",
+	"tqdm",
+]
