@@ -12,6 +12,7 @@ from sklearn.metrics import confusion_matrix, classification_report, ConfusionMa
 
 from datasets import get_test_loader
 from model import build_model
+from utils import set_seed
 
 
 def parse_args():
@@ -20,6 +21,7 @@ def parse_args():
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--ckpt", type=str, default=None)
     p.add_argument("--out-dir", type=str, default=None)
+    p.add_argument("--seed", type=int, default=42)
     return p.parse_args()
 
 
@@ -91,8 +93,11 @@ def evaluate(model: nn.Module, loader: DataLoader, criterion: nn.Module, device:
 
 def main():
     args = parse_args()
+    set_seed(args.seed)
+
     ckpt_path = args.ckpt or f"artifacts/{args.model}_best.pt"
     out_dir = args.out_dir or f"results/{args.model}"
+    
     test_loader, class_names = get_test_loader(
         root="data",
         batch_size=args.batch_size

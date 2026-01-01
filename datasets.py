@@ -1,6 +1,7 @@
 from typing import Tuple
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, Dataset, random_split
+from torch import Generator
 
 import typing
 
@@ -15,6 +16,7 @@ def get_train_val_loaders(
     batch_size: int,
     val_size: int = 5000,
     num_workers: int = 0,
+    seed: int = 42
 ) -> Tuple[DataLoader, DataLoader]:
     transform = get_transforms()
 
@@ -30,11 +32,14 @@ def get_train_val_loaders(
         full_train, [train_size, val_size]
     )
 
+    g = Generator()
+    g.manual_seed(seed)
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
         shuffle=True,
-        num_workers=num_workers
+        num_workers=num_workers,
+        generator=g
     )
 
     val_loader = DataLoader(

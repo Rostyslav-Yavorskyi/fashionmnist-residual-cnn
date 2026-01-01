@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 from datasets import get_train_val_loaders
 from model import build_model
+from utils import set_seed
 
 # -------------------------
 # Helpers
@@ -23,6 +24,7 @@ def parse_args():
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--ckpt", type=str, default=None)
+    p.add_argument("--seed", type=int, default=42)
     return p.parse_args()
 
 
@@ -220,11 +222,13 @@ def fit(
 
 def main():
     args = parse_args()
+    set_seed(args.seed)
 
     train_loader, val_loader = get_train_val_loaders(
         root="data", 
         batch_size=64, 
-        val_size=5000
+        val_size=5000,
+        seed=args.seed
     )
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
