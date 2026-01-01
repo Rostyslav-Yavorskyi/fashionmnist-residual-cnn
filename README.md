@@ -112,6 +112,7 @@ Best checkpoint selected based on validation loss.
     - Shirt ↔ T-shirt / Pullover / Coat
   - Residual connections stabilize training but give only modest gains on small datasets
 
+---
 
 ## Artifacts
 
@@ -138,4 +139,16 @@ results/
   - Matplotlib
   - tqdm
 
+---
+
+## Next Steps
+
+Potential improvements for future iterations:
+
+- Add learning rate scheduler (Cosine / StepLR)
+- Experiment with data augmentation (random crop, flip)
+- Implement deeper ResidualCNN variants
+- Add mixed precision training (AMP)
+- Track experiments with TensorBoard or Weights & Biases
+- Evaluate per-class accuracy and error cases
 
