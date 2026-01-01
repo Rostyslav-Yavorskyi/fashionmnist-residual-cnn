@@ -9,3 +9,14 @@ wheels/
 # Virtual environments
 .venv
 
+# Data & artifacts
+data/
+artifacts/
+results/
+
+# Checkpoints
+*.pt
+*.pth
+
+# uv
+uv.lock
