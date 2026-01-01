@@ -13,9 +13,6 @@ from datasets import get_train_val_loaders
 from model import build_model
 from utils import set_seed
 
-# -------------------------
-# Helpers
-# -------------------------
 
 def parse_args():
     p = argparse.ArgumentParser()
